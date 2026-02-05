@@ -18,6 +18,5 @@ com\example\demo\model\Bus.class
 com\example\demo\config\SecurityConfig.class
 com\example\demo\repository\RouteRepository.class
 com\example\demo\model\Schedule.class
-com\example\demo\controller\FrontendController.class
 com\example\demo\controller\ScheduleController.class
 com\example\demo\model\Route.class
