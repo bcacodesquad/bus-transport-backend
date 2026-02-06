@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+ import java.util.List;
 
 @RestController
 @RequestMapping("/api/buses")
@@ -15,7 +15,7 @@ import java.util.List;
 public class BusController {
     
     @Autowired
-    private BusService busService;
+                  private BusService busService;
     
     @GetMapping
     public ResponseEntity<List<Bus>> getAllBuses() {
