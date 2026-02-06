@@ -5,17 +5,21 @@ import com.example.demo.service.BusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
- import java.util.List;
+import jakarta.validation.Valid;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/buses")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "https://bus-travel-log.vercel.app"})
 public class BusController {
     
     @Autowired
-                  private BusService busService;
+    private BusService busService;
     
     @GetMapping
     public ResponseEntity<List<Bus>> getAllBuses() {
@@ -47,16 +51,38 @@ public class BusController {
     }
     
     @PostMapping
-    public ResponseEntity<Bus> createBus(@RequestBody Bus bus) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(busService.createBus(bus));
+    public ResponseEntity<?> createBus(@Valid @RequestBody Bus bus, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error -> 
+                errors.put(error.getField(), error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest().body(errors);
+        }
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(busService.createBus(bus));
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(error);
+        }
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Bus> updateBus(@PathVariable Long id, @RequestBody Bus bus) {
+    public ResponseEntity<?> updateBus(@PathVariable Long id, @Valid @RequestBody Bus bus, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error -> 
+                errors.put(error.getField(), error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest().body(errors);
+        }
         try {
             return ResponseEntity.ok(busService.updateBus(id, bus));
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(error);
         }
     }
     

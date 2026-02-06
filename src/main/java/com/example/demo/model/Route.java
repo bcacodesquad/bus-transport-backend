@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,12 +13,15 @@ public class Route {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @NotBlank(message = "Route number is required")
     @Column(nullable = false)
     private String routeNumber;
     
+    @NotBlank(message = "Source is required")
     @Column(nullable = false)
     private String source;
     
+    @NotBlank(message = "Destination is required")
     @Column(nullable = false)
     private String destination;
     
