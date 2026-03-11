@@ -15,7 +15,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/routes")
-@CrossOrigin(origins = {"http://localhost:3000", "https://bus-travel-log.vercel.app"})
 public class RouteController {
     
     @Autowired
