@@ -1,6 +1,9 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,16 +14,20 @@ public class Bus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @NotBlank(message = "Bus number is required")
     @Column(nullable = false, unique = true)
     private String busNumber;
     
+    @NotBlank(message = "Bus type is required")
     @Column(nullable = false)
     private String busType; // AC, Non-AC, Sleeper, etc.
     
+    @Positive(message = "Total seats must be a positive number")
     private Integer totalSeats;
     
     private String registrationNumber;
     
+    @NotBlank(message = "Status is required")
     @Column(nullable = false)
     private String status; // Active, Inactive, Under Maintenance
     

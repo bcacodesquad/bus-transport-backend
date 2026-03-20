@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -13,16 +14,20 @@ public class Timetable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @NotNull(message = "Schedule is required")
     @ManyToOne
     @JoinColumn(name = "schedule_id", nullable = false)
     private Schedule schedule;
     
+    @NotNull(message = "Date is required")
     @Column(nullable = false)
     private LocalDate date;
     
+    @NotNull(message = "Scheduled departure time is required")
     @Column(nullable = false)
     private LocalTime scheduledDeparture;
     
+    @NotNull(message = "Scheduled arrival time is required")
     @Column(nullable = false)
     private LocalTime scheduledArrival;
     

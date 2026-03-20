@@ -5,13 +5,16 @@ import com.example.demo.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/routes")
-@CrossOrigin(origins = "http://localhost:3000")
 public class RouteController {
     
     @Autowired
@@ -49,16 +52,38 @@ public class RouteController {
     }
     
     @PostMapping
-    public ResponseEntity<Route> createRoute(@RequestBody Route route) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(routeService.createRoute(route));
+    public ResponseEntity<?> createRoute(@Valid @RequestBody Route route, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error -> 
+                errors.put(error.getField(), error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest().body(errors);
+        }
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(routeService.createRoute(route));
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(error);
+        }
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Route> updateRoute(@PathVariable Long id, @RequestBody Route route) {
+    public ResponseEntity<?> updateRoute(@PathVariable Long id, @Valid @RequestBody Route route, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error -> 
+                errors.put(error.getField(), error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest().body(errors);
+        }
         try {
             return ResponseEntity.ok(routeService.updateRoute(id, route));
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(error);
         }
     }
     

@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -12,17 +14,21 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @NotNull(message = "Bus is required")
     @ManyToOne
     @JoinColumn(name = "bus_id", nullable = false)
     private Bus bus;
     
+    @NotNull(message = "Route is required")
     @ManyToOne
     @JoinColumn(name = "route_id", nullable = false)
     private Route route;
     
+    @NotNull(message = "Departure time is required")
     @Column(nullable = false)
     private LocalTime departureTime;
     
+    @NotNull(message = "Arrival time is required")
     @Column(nullable = false)
     private LocalTime arrivalTime;
     
